@@ -1,96 +1,71 @@
-## OpenSea Creatures - Starter ERC721, ERC1155, and factory contracts
+ # OpenSea Creatures - Starter ERC721, ERC1155, and factory contracts
 
-What's included:
-
-### Sample ERC721/ERC1155 Contracts
-
-This includes a very simple sample ERC721 / ERC1155 for the purposes of demonstrating integration with the [OpenSea](https://opensea.io) marketplace. We include a script for minting the items.
-
+# What's included: Sample ERC721/ERC1155 Contracts This includes a very simple sample ERC721 / ERC1155 for the purposes of demonstrating integration with the [OpenSea](https://opensea.io) marketplace We include a script for minting the items
 Additionally, this contract whitelists the proxy accounts of OpenSea users so that they are automatically able to trade the ERC721 item on OpenSea (without having to pay gas for an additional approval). On OpenSea, each user has a "proxy" account that they control, and is ultimately called by the exchange contracts to trade their items. (Note that this addition does not mean that OpenSea itself has access to the items, simply that the users can list them more easily if they wish to do so)
-
-### Factory Contracts
-
+--
+Factory Contracts
 In addition to these template 721/1155 contracts, we provide sample factory contracts for running gas-free presales of items that haven't been minted yet. See https://docs.opensea.io/docs/opensea-initial-item-sale-tutorial for more info.
+--
+**Requirements**
+  Node version
+--
+Either make sure you're running a version of node compliant with
+the `engines` requirements
+in `package.json`, or install 
+`Node Version Manager`
+[`nvm`](https://github.com/creationix/nvm) 
+and run `nvm use` to use the correct version of node
+--
 
-## Requirements
-
-### Node version
-
-Either make sure you're running a version of node compliant with the `engines` requirement in `package.json`, or install Node Version Manager [`nvm`](https://github.com/creationix/nvm) and run `nvm use` to use the correct version of node.
-
-## Installation
-
+Installation
+|-|
 Run
-
-```bash
-yarn
-```
-
-If you run into an error while building the dependencies and you're on a Mac, run the code below, remove your `node_modules` folder, and do a fresh `yarn install`:
-
-```bash
-xcode-select --install # Install Command Line Tools if you haven't already.
+||
+`yarn`
+||
+**If you run into an error while building the dependencies and you're on a Mac, 
+run the code below,**
+remove your `node_modules` folder,
+and do a fresh `yarn install`:
+||
+`xcode-select --install # Install Command Line Tools if you haven't already.
 sudo xcode-select --switch /Library/Developer/CommandLineTools # Enable command line tools
-sudo npm explore npm -g -- npm install node-gyp@latest # Update node-gyp
-```
+sudo npm explore npm -g -- npm install node-gyp@latest # Update node-gyp`
+||
 
-## Deploying
 
-### Deploying to the Rinkeby network.
+ 
+Deploying to the Rinkeby network
+Add test fundings to your Rinkeby testnet node on https://faucet.rinkeby.io
+2. To access a Rinkeby testnet node, you'll need to sign up for [Alchemy](https://dashboard.alchemyapi.io/signup?referral=affiliate:e535c3c3-9bc4-428f-8e27-4b70aa2e8ca5) and get a free API key. Click "View Key" and then copy the part of the URL after `v2/`.
+a. You can use [Infura](https://infura.io) if you want as well. Just change `ALCHEMY_KEY` below to `INFURA_KEY`.
+3. Using your API key and the mnemonic for your Metamask wallet (make sure you're using a Metamask seed phrase that you're comfortable using for testing purposes), run:
+ ---  
 
-0. Add test fundings to your Rinkeby testnet node on https://faucet.rinkeby.io
-1. To access a Rinkeby testnet node, you'll need to sign up for [Alchemy](https://dashboard.alchemyapi.io/signup?referral=affiliate:e535c3c3-9bc4-428f-8e27-4b70aa2e8ca5) and get a free API key. Click "View Key" and then copy the part of the URL after `v2/`.
-   a. You can use [Infura](https://infura.io) if you want as well. Just change `ALCHEMY_KEY` below to `INFURA_KEY`.
-2. Using your API key and the mnemonic for your Metamask wallet (make sure you're using a Metamask seed phrase that you're comfortable using for testing purposes), run:
+`export ALCHEMY_KEY="<your_alchemy_project_id>"`
 
-```
-export ALCHEMY_KEY="<your_alchemy_project_id>"
-export MNEMONIC="<metmask_mnemonic>"
-export DEPLOY_CREATURES_SALE=0 
-yarn truffle deploy --network rinkeby
-```
+`export MNEMONIC="<metmask_mnemonic>"`
 
-### Minting tokens.
+`export DEPLOY_CREATURES_SALE=0`
 
-After deploying to the Rinkeby network, there will be a contract on Rinkeby that will be viewable on [Rinkeby Etherscan](https://rinkeby.etherscan.io). For example, here is a [recently deployed contract](https://rinkeby.etherscan.io/address/0xeba05c5521a3b81e23d15ae9b2d07524bc453561). You should set this contract address and the address of your Metamask account as environment variables when running the minting script. If a [CreatureFactory was deployed](https://github.com/ProjectOpenSea/opensea-creatures/blob/master/migrations/2_deploy_contracts.js#L38), which the sample deploy steps above do, you'll need to specify its address below as it will be the owner on the NFT contract, and only it will have mint permissions. In that case, you won't need NFT_CONTRACT_ADDRESS, as all we need is the contract with mint permissions here.
+`yarn truffle deploy --network rinkeby`
 
-```
-export OWNER_ADDRESS="<my_address>"
-export NFT_CONTRACT_ADDRESS="<deployed_contract_address>"
-export FACTORY_CONTRACT_ADDRESS="<deployed_factory_contract_address>"
-export NETWORK="rinkeby"
-node scripts/mint.js
-```
 
-### Diagnosing Common Issues
+# Minting tokens After deploying to the Rinkeby network there will be a contract on Rinkeby that will be viewable on [Rinkeby Etherscan](https://rinkeby.etherscan.io). For example, here is a [recently deployed contract](https://rinkeby.etherscan.io/address/0xeba05c5521a3b81e23d15ae9b2d07524bc453561) You should set this contract address and the address of your Metamask account as environment variables when running the minting script If a [CreatureFactory was deployed](https://github.com/ProjectOpenSea/opensea-creatures/blob/master/migrations/2_deploy_contracts.js#L38) which the sample deploy steps above do, you will need to specify its address below as it will be the owner on the NFT contract, and only it will have mint permissions In that case you wont need NFT_CONTRACT_ADDRESS as all we need is the contract with mint permissions here
 
-If you're running a modified version of `sell.js` and not getting expected behavior, check the following:
+`export OWNER_ADDRESS="<my_address>"`
 
-- Is the `expirationTime` in future? If no, change it to a time in the future.
+`export NFT_CONTRACT_ADDRESS="<deployed_contract_address>"`
 
-- Is the `expirationTime` a fractional second? If yes, round the listing time to the nearest second.
+`export FACTORY_CONTRACT_ADDRESS="<deployed_factory_contract_address>"`
 
-- Are the input addresses all strings? If no, convert them to strings.
+`export NETWORK="rinkeby"`
 
-- Are the input addresses checksummed? You might need to use the checksummed version of the address.
+`node scripts/mint.js`
 
-- Is your computer's internal clock accurate? If no, try enabling automatic clock adjustment locally or following [this tutorial](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/set-time.html) to update an Amazon EC2 instance.
+#  Diagnosing Common Issues If you're running a modified version of `sell.js` and not getting expected behavior, check the following: |Is the `expirationTime` in future? |If no, change it to a time in the future |Is the `expirationTime` a fractional second? |If yes, round the listing time to the nearest second |Are the input addresses all strings? |If no convert them to strings|Are the input addresses checksummed?|You might need to use the checksummed version of the address | Is your computer's internal clock accurate? | If no, try enabling automatic clock adjustment locally or following [this tutorial](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/set-time.html) to update an Amazon EC2 instance | Do you have any conflicts that result from globally installed node packages? | If yes, try `yarn remove -g truffle; yarn`| Are you running a version of node compliant with the `engines` requirement in `package.json` ? | If no, try `nvm use; rm -rf node_modules; yarn` 
 
-- Do you have any conflicts that result from globally installed node packages? If yes, try `yarn remove -g truffle; yarn`
-
-- Are you running a version of node compliant with the `engines` requirement in `package.json`? If no, try `nvm use; rm -rf node_modules; yarn`
-
-# About OpenSea Creature Accessories
-
-This is a sample ERC-1155 contract for the purposes of demonstrating integration with the [OpenSea](https://opensea.io) marketplace for crypto collectibles. We also include:
-
-- A factory contract for making sell orders for unminted items (allowing for **gas-free and mint-free presales**).
-- A configurable lootbox contract for selling randomized collections of ERC-1155 items.
-
-On top of the features from the OpenSea ERC721 sample contracts above, ERC1155
-
-- supports multiple creators per contract, where only the creator is able to mint more copies
-- supports pre-minted items for the lootbox to choose from
+# About OpenSea Creature Accessories This is a sample ERC-1155 contract for the purposes of demonstrating integration with the [OpenSea](https://opensea.io) marketplace for crypto collectibles. We also include: A factory contract for making sell orders for unminted items (allowing for **gas-free and mint-free presales**) A configurable lootbox contract for selling randomized collections of ERC-1155 items. On top of the features from the OpenSea ERC721 sample contracts above, ERC1155 supports multiple creators per contract, where only the creator is able to mint more copies and supports pre-minted items for the lootbox to choose from
 
 ## Configuring the Lootbox
 
